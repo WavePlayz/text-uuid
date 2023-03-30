@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<meta 
+	name="viewport" 
+	content="width=device-width, initial-scale=1.0"
+	>
+<meta 
+	http-equiv="X-UA-Compatible" 
+	content="ie=edge"
+	>
+<meta 
+	http-equiv="Content-Type" 
+	content="text/html; charset=utf-8"
+	/>
+	
+<title>Text UUID - WavePlayz</title>
+
+</head>
+<body>
+
+<h1> WavePlayz </h1>
+
+<input 
+	id="inputText" 
+	type="text" 
+	oninput="onFileUpload(this)" 
+	name="files[]"
+	multiple
+></input>
+
+
+<script>
+/*  Helper functions
+ */
+ 
+function trimNBTJSON (data) {
+try {
+	let out = data
+	
+	if (data.value) {
+		out = trimNBTJSON(data.value)
+	}
+	
+	else if (typeof data == "object") {
+		out = Array.isArray(data) ? [] : {}
+		
+		for (let key in data) {
+			let value = data[key]
+			
+			out[key] = trimNBTJSON( value )
+		}
+	}
+	
+	return out
+} catch (error) {
+	alert( error )
+}
+}
+</script>
+
+
+<script>
+const nbt = require("prismarine-nbt")
+const { Buffer } = require("buffer")
+
+async function getNBTJSON (data) {
+try {
+	let buffer = Buffer.from(data)
+	let value = await nbt.parse(buffer)
+	
+	let { parsed, metadata } = value
+	
+	if (parsed.value.entities) {
+		console.warn( "Unfortunately, this app currently doesn't support Java edition structure files." )
+		return null
+	}
+	
+	return parsed
+} catch (error) {
+	alert( error )
+}
+}
+
+function onFileUpload (elem) {
+try {
+	let [ file0 ] = elem.files
+	
+	let fileReader = new FileReader()
+
+	fileReader.onload = async function (e) {
+		let nbtJSON = await getNBTJSON( e.target.result )
+		let nbtJSONTrim = trimNBTJSON( nbtJSON ) 
+		
+		//console.log( nbtJSON )
+		
+		onNBTJSONLoad( nbtJSONTrim )
+	}
+
+	fileReader.readAsArrayBuffer(file0)
+
+} catch (error) {
+	alert( error )
+}
+
+}
+
+</script>
+
+<script>
+
+function mapNBT (data) {
+	
+}
+
+function onNBTJSONLoad (data) {
+try {
+	document.write( JSON.stringify( data ) )
+} catch (error) {
+	alert( error )
+}
+}
+
+</script>
+
+</body>
+
+</html>
+
