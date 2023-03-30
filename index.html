@@ -145,12 +145,18 @@ class TextUUID {
 function onTextInput (elm) {
 	let { value } = elm
 	let uuid = TextUUID.uuid(value)
-	
-let uuidtext = TextUUID.text(uuid)
+	inputUUID.value = 
+let uuidtext = 
 
 console.log( text )
 console.log( uuid )
 console.log( uuidtext )
+}
+
+function onUUIDInput (elm) {
+	let { value } = elm
+	
+	TextUUID.text(uuid)
 }
 
 </script>
