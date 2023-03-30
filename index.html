@@ -37,97 +37,114 @@
 
 
 <script>
-/*  Helper functions
- */
- 
-function trimNBTJSON (data) {
-try {
-	let out = data
+class TextUUID {
+	static #MAX_TEXT_SIZE = 24
+	static #CHAR_SET = " -._,abcdefghijklmnopqrstuvwxyz"
 	
-	if (data.value) {
-		out = trimNBTJSON(data.value)
+	static #indexOf (char) {
+		let index = this.#CHAR_SET.indexOf( char )
+	
+		if (index < 0) throw "char not exist " + char; 
+	
+		return index
 	}
 	
-	else if (typeof data == "object") {
-		out = Array.isArray(data) ? [] : {}
-		
-		for (let key in data) {
-			let value = data[key]
+	static #valueOf (index) {
+		return this.#CHAR_SET[ index ] || ""
+	}
+	
+	static #charCode ( char ) {
+		return this.#indexOf( char.toLowerCase() ) + 1
+	}
+	
+	static #codeChar (code) {
+		return this.#valueOf( code - 1 )
+	}
+	
+	static #charBase ( char ) {
+		return this.#charCode(char)
+			.toString(2)
+			.padStart(5, 0)
+	}
+	
+	static #baseChar (base) {
+		return this.#codeChar( parseInt(base, 2) )
+	}
+	
+	static #baseHex (base) {
+		return parseInt( base, 2 )
+			.toString(16)
+	}
+	
+	static #textHex (text) {
+		let textBase = text
+			.split('')
+			.map( v => this.#charBase(v) )
+			.join('')
 			
-			out[key] = trimNBTJSON( value )
-		}
+		return this.#baseHex( textBase )
 	}
 	
-	return out
-} catch (error) {
-	alert( error )
-}
+	static #hexText (hex) {
+		return parseInt(hex, 16)
+			.toString(2)
+			.padStart(50,0)
+			.match(/.{5}/g)
+			.map(v =>
+				this.#baseChar(v)
+			)
+			.join('')
+	}
+	
+	static #validateText (text) {
+		let max = this.#MAX_TEXT_SIZE
+		
+		if (text.length > max)
+			throw "invalid text length, max is " + max;
+	}
+	
+	static uuid (text) {
+		this.#validateText(text)
+	
+		return text
+			.match(/.{1,10}/g)
+			.map( (v, i) => this.#textHex( v ).padStart( (i<2 ? 13:4), 0 ) )
+			.reverse()
+			.join('')
+			.padStart(32, 0)
+			.match(/(.{8})(.{4})(.{4})(.{4})(.{12})/)
+			.splice(1)
+			.join('-')
+			
+	}
+	
+	static #validateUUID (uuid) {
+		let uuidRegex = /.{8}-.{4}-.{4}-.{4}-.{12}/
+
+		if (!uuidRegex.test(uuid))
+			throw "invalid uuid";
+	} 
+	
+	static text (uuid) {
+		this.#validateUUID(uuid)
+		
+		return uuid
+			.replaceAll('-','')
+			.match(/.(.{5})(.{13})(.{13})/)
+			.splice(1)
+			.reverse()
+			.map( v => this.#hexText(v) )
+			.join('')
+		
+	}
 }
 </script>
-
 
 <script>
-const nbt = require("prismarine-nbt")
-const { Buffer } = require("buffer")
 
-async function getNBTJSON (data) {
-try {
-	let buffer = Buffer.from(data)
-	let value = await nbt.parse(buffer)
-	
-	let { parsed, metadata } = value
-	
-	if (parsed.value.entities) {
-		console.warn( "Unfortunately, this app currently doesn't support Java edition structure files." )
-		return null
-	}
-	
-	return parsed
-} catch (error) {
-	alert( error )
-}
-}
-
-function onFileUpload (elem) {
-try {
-	let [ file0 ] = elem.files
-	
-	let fileReader = new FileReader()
-
-	fileReader.onload = async function (e) {
-		let nbtJSON = await getNBTJSON( e.target.result )
-		let nbtJSONTrim = trimNBTJSON( nbtJSON ) 
-		
-		//console.log( nbtJSON )
-		
-		onNBTJSONLoad( nbtJSONTrim )
-	}
-
-	fileReader.readAsArrayBuffer(file0)
-
-} catch (error) {
-	alert( error )
-}
-
-}
 
 </script>
 
-<script>
-
-function mapNBT (data) {
-	
-}
-
-function onNBTJSONLoad (data) {
-try {
-	document.write( JSON.stringify( data ) )
-} catch (error) {
-	alert( error )
-}
-}
-
-</script>
 
 </body>
 
