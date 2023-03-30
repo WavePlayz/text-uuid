@@ -152,12 +152,15 @@ class TextUUID {
 
 <script>
 
-inputText.pattern = TextUUID.charSet//.split("").join("|")
+inputText.pattern = ".{4}" //TextUUID.charSet//.split("").join("|")
 
 console.log(inputText.pattern)
 
 function onTextInput (elm) {
+	elem.value = 
+	
 	let { value } = elm
+	
 	let uuid = TextUUID.uuid(value)
 	
 	inputUUID.value = uuid
