@@ -152,9 +152,13 @@ class TextUUID {
 
 <script>
 
-inputText.pattern = ".{4}" //TextUUID.charSet//.split("").join("|")
+inputText.pattern = ".{4}" //
 
 console.log(inputText.pattern)
+
+let reg = new RegExp( 
+	"[^" + TextUUID.charSet + "\"
+)
 
 function onTextInput (elm) {
 	elem.value = 
