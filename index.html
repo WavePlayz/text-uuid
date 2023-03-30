@@ -155,8 +155,9 @@ console.log( uuidtext )
 
 function onUUIDInput (elm) {
 	let { value } = elm
+	let text = UUID.text(value)
 	
-	TextUUID.text(uuid)
+	inputText.value = text
 }
 
 </script>
