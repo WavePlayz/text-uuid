@@ -47,6 +47,10 @@ class TextUUID {
 	static #MAX_TEXT_SIZE = 24
 	static #CHAR_SET = " -._,abcdefghijklmnopqrstuvwxyz"
 	
+	static get charSet () {
+		return this.#CHAR_SET
+	}
+	
 	static #indexOf (char) {
 		let index = this.#CHAR_SET.indexOf( char )
 	
