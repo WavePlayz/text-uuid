@@ -152,7 +152,9 @@ class TextUUID {
 
 <script>
 
-inputText.pattern = TextUUID.charSet.split("").join("|")
+inputText.pattern = TextUUID.charSet//.split("").join("|")
+
+console.log(inputText.pattern)
 
 function onTextInput (elm) {
 	let { value } = elm
