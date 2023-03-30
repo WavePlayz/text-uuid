@@ -158,7 +158,9 @@ let reg = new RegExp(
 )
 
 function onTextInput (elm) {
-	elm.value = elm.value.replace(reg,"").substr(0,24)
+	elm.value = elm.value
+		.replace(reg,"")
+		.substr(0,24)
 	
 	let { value } = elm
 	
