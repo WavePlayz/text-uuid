@@ -18,7 +18,9 @@
 <title>Text UUID - WavePlayz</title>
 
 <style>
-
+input {
+width: 100%;
+}
 </style>
 
 </head>
@@ -155,7 +157,7 @@ function onTextInput (elm) {
 
 function onUUIDInput (elm) {
 	let { value } = elm
-	let text = UUID.text(value)
+	let text = TextUUID.text(value)
 	
 	inputText.value = text
 }
