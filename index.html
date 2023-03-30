@@ -164,6 +164,8 @@ function onTextInput (elm) {
 	
 	let { value } = elm
 	
+	if (! value) return;
+	
 	let uuid = TextUUID.uuid(value)
 	
 	inputUUID.value = uuid
